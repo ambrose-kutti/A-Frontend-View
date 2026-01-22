@@ -6,20 +6,37 @@
 
 UI-Demo provides a user-friendly interface for managing and viewing RTSP streams and other media files. This project offers a versatile platform accessible through API, CLI, and comprehensive testing, ensuring a robust and reliable user experience. Whether you're streaming live video or managing a library of media files, UI-Demo offers a streamlined solution.
 
+---
+
 ## ✨ Features
 
 - 🌐 Api
 - 🧪 Testing
 - 💻 Cli
 
+---
 
 ## 📁 Project Structure
 
 ```
-.
 ├── Contents Used and running file.txt
 └── app.py
+└──Templates /
+          └── front.html
+└──static /
+          └── script.js
 ```
+---
+
+## 🔄️Running
+
+1. Download the files from the git hub(clone)
+2. create a **template folder** and paste your `front.html`
+3. create a **static folder** and paste your `script.js`
+4. now run the app.py
+5. and test it via files videos 
+
+---
 
 ## 👥 Contributing
 
