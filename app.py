@@ -2,26 +2,32 @@ import os
 import uuid
 import shlex
 import subprocess
+import time
+import threading
 from pathlib import Path
 from typing import Dict, Optional
 from fastapi import FastAPI, Body, HTTPException, Request
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
-BASE_DIR = Path("/tmp/rtsp_hls_demo")
+BASE_DIR = Path("C:\\tmp\\rtsp_hls_demo")
 BASE_DIR.mkdir(parents=True, exist_ok=True)
 
 app = FastAPI(title="Emotion Demo — UI + RTSP→HLS Backend")
 app.mount("/hls", StaticFiles(directory=str(BASE_DIR)), name="hls")    # serve HLS output
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 workers: Dict[str, subprocess.Popen] = {}    # track running ffmpeg processes: id -> subprocess.Popen
+
+# If ffmpeg is not in your system PATH, replace "ffmpeg" below with the full path, e.g., r"C:\ffmpeg\bin\ffmpeg.exe"
+FFMPEG_BINARY = r"C:\Users\OASYS-LAP-434\Downloads\ffmpeg-8.0.1-essentials_build\bin\ffmpeg.exe"
 
 def start_ffmpeg_hls(rtsp_url: str, out_dir: Path) -> subprocess.Popen:
         out_dir.mkdir(parents=True, exist_ok=True)
         # basic ffmpeg HLS command
         cmd = [
-            "ffmpeg",
-            "-rtsp_transport", "udp", #or udp also 
+            FFMPEG_BINARY,
+            "-rtsp_transport", "tcp",
             "-i", rtsp_url,
             "-vf", "scale=w=640:h=-2",
             "-c:v", "libx264",
@@ -38,13 +44,27 @@ def start_ffmpeg_hls(rtsp_url: str, out_dir: Path) -> subprocess.Popen:
             str(out_dir / "index.m3u8"),
         ]
         # start process
-        p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        print(f"[DEBUG] Starting ffmpeg for RTSP: {rtsp_url}")
+        print(f"[DEBUG] Output dir: {out_dir}")
+        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, creationflags=subprocess.CREATE_NEW_PROCESS_GROUP if os.name == 'nt' else 0)
+        
+        # Log stderr in background thread
+        def log_stderr():
+            try:
+                for line in iter(p.stderr.readline, ''):
+                    if line:
+                        print(f"[FFMPEG] {line.strip()}")
+            except:
+                pass
+        
+        thread = threading.Thread(target=log_stderr, daemon=True)
+        thread.start()
         return p
 
 @app.get("/", response_class=HTMLResponse)
 def ui():
         with open("templates/front.html", "r", encoding="utf-8") as f:
-        return f.read()
+            return f.read()
 
 @app.post("/start")
 def start(rtsp: str = Body(..., embed=True)):
@@ -54,6 +74,15 @@ def start(rtsp: str = Body(..., embed=True)):
         out_dir = BASE_DIR / sid
         try:
             p = start_ffmpeg_hls(rtsp, out_dir)
+            time.sleep(3)
+            if p.poll() is not None:
+                stderr_output = ""
+                if p.stderr:
+                    try:
+                        stderr_output = p.stderr.read()
+                    except:
+                        pass
+                raise Exception(f"ffmpeg exited: {stderr_output}")
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"ffmpeg start failed: {e}")
         workers[sid] = p
@@ -78,4 +107,13 @@ def stop(id: str = Body(..., embed=True)):
 def status_endpoint(id: str):
         p = workers.get(id)
         running = p is not None and p.poll() is None
-        return JSONResponse({"id": id, "running": running})
+        out_dir = BASE_DIR / id
+        playlist_exists = (out_dir / "index.m3u8").exists()
+        segments = list(out_dir.glob("*.ts")) if out_dir.exists() else []
+        return JSONResponse({
+            "id": id, 
+            "running": running,
+            "playlist_exists": playlist_exists,
+            "segment_count": len(segments),
+            "output_dir": str(out_dir)
+        })
