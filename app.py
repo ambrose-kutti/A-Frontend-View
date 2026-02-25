@@ -18,9 +18,7 @@ app.mount("/hls", StaticFiles(directory=str(BASE_DIR)), name="hls")    # serve H
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 workers: Dict[str, subprocess.Popen] = {}    # track running ffmpeg processes: id -> subprocess.Popen
-
-# If ffmpeg is not in your system PATH, replace "ffmpeg" below with the full path, e.g., r"C:\ffmpeg\bin\ffmpeg.exe"
-FFMPEG_BINARY = r"C:\Users\OASYS-LAP-434\Downloads\ffmpeg-8.0.1-essentials_build\bin\ffmpeg.exe"
+FFMPEG_BINARY = r"your ffmpeg.exe PATH"        # If ffmpeg is not in your system PATH, replace "ffmpeg" below with the full path, e.g., r"C:\ffmpeg\bin\ffmpeg.exe"
 
 def start_ffmpeg_hls(rtsp_url: str, out_dir: Path) -> subprocess.Popen:
         out_dir.mkdir(parents=True, exist_ok=True)
@@ -47,7 +45,7 @@ def start_ffmpeg_hls(rtsp_url: str, out_dir: Path) -> subprocess.Popen:
         print(f"[DEBUG] Starting ffmpeg for RTSP: {rtsp_url}")
         print(f"[DEBUG] Output dir: {out_dir}")
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, creationflags=subprocess.CREATE_NEW_PROCESS_GROUP if os.name == 'nt' else 0)
-        
+
         # Log stderr in background thread
         def log_stderr():
             try:
@@ -56,7 +54,6 @@ def start_ffmpeg_hls(rtsp_url: str, out_dir: Path) -> subprocess.Popen:
                         print(f"[FFMPEG] {line.strip()}")
             except:
                 pass
-        
         thread = threading.Thread(target=log_stderr, daemon=True)
         thread.start()
         return p
