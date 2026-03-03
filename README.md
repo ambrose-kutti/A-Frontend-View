@@ -120,7 +120,7 @@ A-Frontend-View/
 ├── static/                        # Contains static assets (CSS, JavaScript, images)
 │   ├── index.js                   # Frontend JavaScript logic
 │   └── style.css                  # Frontend styling
-│   └── # Other static assets like default images, favicons etc.
+│   └── # Other static assets      # like default images, favicons etc.
 └── templates/                     # HTML templates served by FastAPI
     └── index.html                 # Main entry point HTML file for the UI
 ```
