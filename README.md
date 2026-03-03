@@ -7,7 +7,6 @@
 [![GitHub stars](https://img.shields.io/github/stars/ambrose-kutti/A-Frontend-View?style=for-the-badge)](https://github.com/ambrose-kutti/A-Frontend-View/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/ambrose-kutti/A-Frontend-View?style=for-the-badge)](https://github.com/ambrose-kutti/A-Frontend-View/network)
 [![GitHub issues](https://img.shields.io/github/issues/ambrose-kutti/A-Frontend-View?style=for-the-badge)](https://github.com/ambrose-kutti/A-Frontend-View/issues)
-[![GitHub license](https://img.shields.io/badge/license-No%20License%20Detected-lightgrey?style=for-the-badge)](LICENSE)
 
 **A versatile web UI for real-time media streaming, local file uploads, and YouTube video playback.**
 
@@ -29,11 +28,18 @@ A-Frontend-View is a straightforward web application designed to provide a unifi
 ## 🖥️ Screenshots
 
 <!-- TODO: Add actual screenshots of RTSP stream, upload interface, and YouTube player. -->
-The User Interface Page:
+
+**The User Interface Page:**
 <img width="1190" height="620" alt="Screenshot 2026-02-25 124835" src="https://github.com/user-attachments/assets/4c6da23b-7505-4f24-8d73-6c03aa8bfd7f" />
-The Local file Upload and Preview side:
+
+**The Local file Upload and Preview side:**
 <img width="1162" height="620" alt="Screenshot 2026-02-25 125520" src="https://github.com/user-attachments/assets/0896b55f-bd86-4e08-ae97-4dc73c84dcd2" />
-The Youtube video Upload and Preview side:
+
+**The Youtube video Upload and Preview side:**
+<img width="1167" height="614" alt="Screenshot 2026-02-25 125606" src="https://github.com/user-attachments/assets/9cd7ebd5-4fe3-4152-b328-ca7ec9af1d57" />
+
+
+
 
 
 ## 🛠️ Tech Stack
