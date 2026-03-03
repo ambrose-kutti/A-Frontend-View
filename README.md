@@ -114,15 +114,15 @@ Before you begin, ensure you have the following installed on your system:
 A-Frontend-View/
 ├── .gitattributes
 ├── .gitignore
-├── Contents Used and running file.txt # Important notes and setup instructions
-├── README.md                      # This README file
-├── app.py                         # Main FastAPI backend application
-├── static/                        # Contains static assets (CSS, JavaScript, images)
-│   ├── index.js                   # Frontend JavaScript logic
-│   └── style.css                  # Frontend styling
-│   └── # Other static assets      # like default images, favicons etc.
-└── templates/                     # HTML templates served by FastAPI
-    └── index.html                 # Main entry point HTML file for the UI
+├── Contents Used and running file.txt     # Important notes and setup instructions
+├── README.md                              # This README file
+├── app.py                                 # Main FastAPI backend application
+├── static/                                # Contains static assets (CSS, JavaScript, images)
+│   ├── index.js                           # Frontend JavaScript logic
+│   └── style.css                          # Frontend styling
+│   └── # Other static assets              # like default images, favicons etc.
+└── templates/                             # HTML templates served by FastAPI
+    └── index.html                         # Main entry point HTML file for the UI
 ```
 
 ## ⚙️ Configuration
